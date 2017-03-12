@@ -32,6 +32,14 @@
             accessToken: 'pk.eyJ1IjoibXJmcmVlemUiLCJhIjoiY2owNWg2a2kyMDA2cjMycGZndzA2ZzZneCJ9.-wsVwihnGBO41Z9FvV_UAQ'
         }).addTo(map);
     });
+
+    /* As soon as the user agrees to share its location and it’s detected by the browser,
+    the map will set the view to it.
+    */
+    map.locate({
+        setView: true,
+        maxZoom: 16
+    });
     </script>
 </head>
 
