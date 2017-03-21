@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Osrm Tests Requests</title>
+
+    <link href='../json-formatter/JSONFormatter.css' media='all' rel='stylesheet' type='text/css' >
+    <script src="../json-formatter/JSONFormatter.js"></script>
+
+    <script src="../jquery-latest.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "http://163.172.40.128:5000/route/v1/driving/13.388860,52.517037;13.385983,52.496891?steps=true",
+            success: function(data, textStatus, jqXHR) {
+
+                console.log(data);
+                JSONFormatter.format(data, {});
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log("error : " + textStatus + errorThrown);
+            }
+        });
+
+    });
+    </script>
+</head>
+
+<body>
+    <h1>Osrm Tests Requests</h1>
+    <ul>
+        <li><a href="http://163.172.40.128:5000/route/v1/driving/13.388860,52.517037;13.385983,52.496891?steps=true">example query</a></li>
+    </ul>
+</body>
+
+</html>
