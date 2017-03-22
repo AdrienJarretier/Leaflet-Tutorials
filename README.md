@@ -9,6 +9,8 @@ Showcase on my page here : http://adrienjarretier.github.io/Leaflet-Samples/
 
 # libs
 
-Using js plugin [json-formatter](https://github.com/emmasax/json-formatter)
+[Leaflet](http://leafletjs.com/)
 
-Routing Machine [OSRM](https://github.com/Project-OSRM/osrm-backend)
+[json-formatter](https://github.com/emmasax/json-formatter)
+
+[OSRM](https://github.com/Project-OSRM/osrm-backend)
