@@ -4,18 +4,77 @@
 <head>
     <meta charset="UTF-8">
     <title>Osrm Tests Requests</title>
-
-    <link href='../json-formatter/JSONFormatter.css' media='all' rel='stylesheet' type='text/css' >
+    <link href='../json-formatter/JSONFormatter.css' media='all' rel='stylesheet' type='text/css'>
     <script src="../json-formatter/JSONFormatter.js"></script>
-
     <script src="../jquery-latest.min.js"></script>
     <script type="text/javascript">
+    const SERVER = "https://router.project-osrm.org";
+
+    function makeUrl(osrmReq) {
+
+        var requestUrl = SERVER + '/' + osrmReq.service + '/' + osrmReq.version + '/' + osrmReq.profile + '/';
+
+        for (var i = 0; i < osrmReq.coords.length; ++i) {
+
+            requestUrl += osrmReq.coords[i].lo + ',' + osrmReq.coords[i].la + ';';
+        }
+
+        requestUrl = requestUrl.slice(0, -1);
+
+        if (osrmReq.options.length > 0) {
+            requestUrl += '?';
+
+            for (var i = 0; i < osrmReq.options.length; ++i) {
+
+                requestUrl += osrmReq.options[i] + '&';
+            }
+            requestUrl = requestUrl.slice(0, -1);
+        }
+
+        return requestUrl;
+    }
+
     $(document).ready(function() {
+
+        var osrmReq = {
+
+            // One of the following values: route, nearest, table, match, trip, tile
+            service: "route",
+
+            // Version of the protocol implemented by the service. v1 for all OSRM 5.x installations
+            version: "v1",
+
+            // Mode of transportation, is determined statically by the Lua profile that is used to prepare the data using osrm-extract. Typically car, bike or foot if using one of the supplied profiles.
+            profile: "car",
+
+
+            coords: [{
+                lo: 13.388860,
+                la: 52.517037,
+            }, {
+                lo: 13.385983,
+                la: 52.496891,
+            }],
+
+            /*
+                steps : Return route steps for each route leg
+            */
+            options: ["steps=true"]
+
+        };
+
+        console.log(osrmReq);
+
+        var madeUrl = makeUrl(osrmReq);
+
+        console.log(madeUrl);
+
+        $("body").append("<p>OSRM HTTP request <br> <strong>" + madeUrl + "</strong></p>");
 
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "https://router.project-osrm.org/route/v1/driving/13.388860,52.517037;13.385983,52.496891?steps=true",
+            url: madeUrl,
             success: function(data, textStatus, jqXHR) {
 
                 console.log(data);
@@ -33,12 +92,7 @@
 
 <body>
     <h1>Osrm Tests Requests</h1>
-
     <p>Documentation for OSRM can be found here : <a href="https://github.com/Project-OSRM/osrm-backend/wiki">osrm-backend/wiki</a></p>
-
-    <ul>
-        <li><a href="https://router.project-osrm.org/route/v1/driving/13.388860,52.517037;13.385983,52.496891?steps=true">example query</a></li>
-    </ul>
 </body>
 
 </html>
