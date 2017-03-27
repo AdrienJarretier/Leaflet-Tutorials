@@ -35,12 +35,16 @@
                     // removing the last ';'
                     requestUrl = requestUrl.slice(0, -1);
 
-                    if (osrmReq.options.length > 0) {
+                    // get the array of options keys
+                    var optionsKeys = Object.keys(osrmReq.options);
+
+                    if (optionsKeys.length > 0) {
                         requestUrl += '?';
 
-                        for (var i = 0; i < osrmReq.options.length; ++i) {
+                        for (var i = 0; i < optionsKeys.length; ++i) {
 
-                            requestUrl += osrmReq.options[i] + '&';
+                            var key = optionsKeys[i];
+                            requestUrl += key + '=' + osrmReq.options[key] + '&';
                         }
 
                         // removing the last '&'
@@ -74,7 +78,9 @@
                     /*
                         steps : Return route steps for each route leg
                     */
-                    options: ["steps=true"]
+                    options: {
+                        steps: true
+                    }
 
                 };
 
