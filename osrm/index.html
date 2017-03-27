@@ -16,6 +16,13 @@
             url: "conf.json",
             success: function(config, textStatus, jqXHR) {
 
+                /**
+                 * Make the request Url for osrm-routed (HTTP server)
+                 *
+                 * @param {object} osrmReq - the object with the parameters of the request, see the osrmReq object created below
+                 *
+                 * @returns {string} the url for the request ready to be sent.
+                 */
                 function makeUrl(osrmReq) {
 
                     var requestUrl = config.server + '/' + osrmReq.service + '/' + osrmReq.version + '/' + osrmReq.profile + '/';
@@ -25,6 +32,7 @@
                         requestUrl += osrmReq.coords[i].lo + ',' + osrmReq.coords[i].la + ';';
                     }
 
+                    // removing the last ';'
                     requestUrl = requestUrl.slice(0, -1);
 
                     if (osrmReq.options.length > 0) {
@@ -34,6 +42,8 @@
 
                             requestUrl += osrmReq.options[i] + '&';
                         }
+
+                        // removing the last '&'
                         requestUrl = requestUrl.slice(0, -1);
                     }
 
