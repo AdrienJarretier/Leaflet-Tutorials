@@ -70,6 +70,7 @@
         console.log(madeUrl);
 
         $("body").append("<p>OSRM HTTP request <br> <strong>" + madeUrl + "</strong></p>");
+        $("body").append("<p>Response documentation : <a href='https://github.com/Project-OSRM/osrm-backend/blob/master/docs/http.md#responses'>Responses</a></p>");
 
         $.ajax({
             type: "GET",
