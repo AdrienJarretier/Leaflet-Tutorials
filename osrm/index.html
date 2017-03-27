@@ -77,9 +77,11 @@
 
                     /*
                         steps : Return route steps for each route leg
+                        geometries : Returned route geometry format (influences overview and per step)
                     */
                     options: {
-                        steps: true
+                        steps: false,
+                        geometries: "geojson"
                     }
 
                 };
