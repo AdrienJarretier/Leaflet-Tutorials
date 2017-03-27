@@ -8,84 +8,96 @@
     <script src="../json-formatter/JSONFormatter.js"></script>
     <script src="../jquery-latest.min.js"></script>
     <script type="text/javascript">
-    const SERVER = "https://router.project-osrm.org";
-
-    function makeUrl(osrmReq) {
-
-        var requestUrl = SERVER + '/' + osrmReq.service + '/' + osrmReq.version + '/' + osrmReq.profile + '/';
-
-        for (var i = 0; i < osrmReq.coords.length; ++i) {
-
-            requestUrl += osrmReq.coords[i].lo + ',' + osrmReq.coords[i].la + ';';
-        }
-
-        requestUrl = requestUrl.slice(0, -1);
-
-        if (osrmReq.options.length > 0) {
-            requestUrl += '?';
-
-            for (var i = 0; i < osrmReq.options.length; ++i) {
-
-                requestUrl += osrmReq.options[i] + '&';
-            }
-            requestUrl = requestUrl.slice(0, -1);
-        }
-
-        return requestUrl;
-    }
-
     $(document).ready(function() {
-
-        var osrmReq = {
-
-            // One of the following values: route, nearest, table, match, trip, tile
-            service: "route",
-
-            // Version of the protocol implemented by the service. v1 for all OSRM 5.x installations
-            version: "v1",
-
-            // Mode of transportation, is determined statically by the Lua profile that is used to prepare the data using osrm-extract. Typically car, bike or foot if using one of the supplied profiles.
-            profile: "car",
-
-
-            coords: [{
-                lo: 13.388860,
-                la: 52.517037,
-            }, {
-                lo: 13.385983,
-                la: 52.496891,
-            }],
-
-            /*
-                steps : Return route steps for each route leg
-            */
-            options: ["steps=true"]
-
-        };
-
-        console.log(osrmReq);
-
-        var madeUrl = makeUrl(osrmReq);
-
-        console.log(madeUrl);
-
-        $("body").append("<p>OSRM HTTP request <br> <strong>" + madeUrl + "</strong></p>");
-        $("body").append("<p>Response documentation : <a href='https://github.com/Project-OSRM/osrm-backend/blob/master/docs/http.md#responses'>Responses</a></p>");
 
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: madeUrl,
-            success: function(data, textStatus, jqXHR) {
+            url: "conf.json",
+            success: function(config, textStatus, jqXHR) {
 
-                console.log(data);
-                JSONFormatter.format(data, {});
+                function makeUrl(osrmReq) {
+
+                    var requestUrl = config.server + '/' + osrmReq.service + '/' + osrmReq.version + '/' + osrmReq.profile + '/';
+
+                    for (var i = 0; i < osrmReq.coords.length; ++i) {
+
+                        requestUrl += osrmReq.coords[i].lo + ',' + osrmReq.coords[i].la + ';';
+                    }
+
+                    requestUrl = requestUrl.slice(0, -1);
+
+                    if (osrmReq.options.length > 0) {
+                        requestUrl += '?';
+
+                        for (var i = 0; i < osrmReq.options.length; ++i) {
+
+                            requestUrl += osrmReq.options[i] + '&';
+                        }
+                        requestUrl = requestUrl.slice(0, -1);
+                    }
+
+                    return requestUrl;
+                }
+
+
+                var osrmReq = {
+
+                    // One of the following values: route, nearest, table, match, trip, tile
+                    service: "route",
+
+                    // Version of the protocol implemented by the service. v1 for all OSRM 5.x installations
+                    version: "v1",
+
+                    // Mode of transportation, is determined statically by the Lua profile that is used to prepare the data using osrm-extract. Typically car, bike or foot if using one of the supplied profiles.
+                    profile: "car",
+
+
+                    coords: [{
+                        lo: 13.388860,
+                        la: 52.517037,
+                    }, {
+                        lo: 13.385983,
+                        la: 52.496891,
+                    }],
+
+                    /*
+                        steps : Return route steps for each route leg
+                    */
+                    options: ["steps=true"]
+
+                };
+
+                console.log(osrmReq);
+
+                var madeUrl = makeUrl(osrmReq);
+
+                console.log(madeUrl);
+
+                $("body").append("<p>OSRM HTTP request <br> <strong>" + madeUrl + "</strong></p>");
+                $("body").append("<p>Response documentation : <a href='https://github.com/Project-OSRM/osrm-backend/blob/master/docs/http.md#responses'>Responses</a></p>");
+
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: madeUrl,
+                    success: function(data, textStatus, jqXHR) {
+
+                        console.log(data);
+                        JSONFormatter.format(data, {});
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log("error : " + textStatus + errorThrown);
+                    }
+                });
 
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.log("error : " + textStatus + errorThrown);
+                console.log("couldn't get the config file : " + textStatus + errorThrown);
             }
         });
+
 
     });
     </script>
