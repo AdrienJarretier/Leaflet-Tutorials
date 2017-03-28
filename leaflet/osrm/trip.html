@@ -80,23 +80,44 @@
                     // an array of coordinates that are arrays of 2 elements : [latitude, longitude]
                     coords: [
                         [
-                            43.91681, 2.1382
+                            43.91681, 2.1382 // Ateliers Municipaux Charcot
                         ],
                         [
-                            43.9273, 2.14634
+                            43.92712, 2.14642 // Hôtel de Ville
                         ],
                         [
-                            43.9409, 2.1185
+                            43.9409, 2.1185 // Golf de Lasbordes
+                        ],
+                        [
+                            43.9176354, 2.1101724 // Buffalo Grill
+                        ],
+                        [
+                            43.92501, 2.14969 // CCAS
+                        ],
+                        [
+                            43.9216692, 2.1660809 // Stadium
+                        ],
+                        [
+                            43.9536903, 2.1717809 // Mairie de Lescure-d'Albigeois
                         ]
                     ],
 
                     /*
                         steps : Return route steps for each route leg
+
                         geometries : Returned route geometry format (influences overview and per step)
+
+                        roundtrip : Return route is a roundtrip
+                        source : Return route starts at `any` or `first` coordinate
+                        destination : Return route ends at `any` or `last` coordinate
+                        if source=any&destination=any the returned round-trip will still start at the first input coordinate by default.
+
+                        overview : Add overview geometry either `full`, `simplified` according to highest zoom level it could be display on, or not at all (`false`).
                     */
                     options: {
                         steps: false,
-                        geometries: "geojson"
+                        geometries: "geojson", // Returned route geometry in Geojson for Leaflet
+                        overview: "full" // full overview geometry
                     }
 
                 };
