@@ -99,6 +99,36 @@
                         ],
                         [
                             43.9536903, 2.1717809 // Mairie de Lescure-d'Albigeois
+                        ],
+                        [
+                            43.92956, 2.16142 // random address
+                        ],
+                        [
+                            43.94173, 2.1456 // random address
+                        ],
+                        [
+                            43.94494, 2.13718 // random address
+                        ],
+                        [
+                            43.90874, 2.11212 // Mairie du Sequestre
+                        ],
+                        [
+                            43.92739, 2.10972 // random address
+                        ],
+                        [
+                            43.93777, 2.08174 // random address
+                        ],
+                        [
+                            43.94865, 2.211 // random address
+                        ],
+                        [
+                            43.92801, 2.22164 // random address
+                        ],
+                        [
+                            43.91255, 2.21254 // random address
+                        ],
+                        [
+                            43.89177, 2.17134 // random address
                         ]
                     ],
 
@@ -169,6 +199,12 @@
             id: 'mapbox.streets',
             accessToken: 'pk.eyJ1IjoibXJmcmVlemUiLCJhIjoiY2owNWg2a2kyMDA2cjMycGZndzA2ZzZneCJ9.-wsVwihnGBO41Z9FvV_UAQ'
         }).addTo(map);
+
+        map.on('click', function(e) {
+
+            var marker = L.marker(e.latlng).addTo(map);
+            marker.bindPopup(e.latlng.toString()).openPopup();
+        });
 
     });
     </script>
