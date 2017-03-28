@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Osrm Trip Requests</title>
+    <link href='../../json-formatter/JSONFormatter.css' media='all' rel='stylesheet' type='text/css'>
+    <script src="../../json-formatter/JSONFormatter.js"></script>
+    <script src="../../jquery-latest.min.js"></script>
+    <link rel="stylesheet" href="../leaflet/leaflet.css" />
+    <script src="../leaflet/leaflet.js"></script>
+    <style type="text/css">
+    #map {
+        height: 478px;
+        width: 850px;
+        ;
+    }
+    </style>
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "conf.json",
+            success: function(config, textStatus, jqXHR) {
+
+                /**
+                 * Make the request Url for osrm-routed (HTTP server)
+                 *
+                 * @param {object} osrmReq - the object with the parameters of the request, see the osrmReq object created below
+                 *
+                 * @returns {string} the url for the request ready to be sent.
+                 */
+                function makeUrl(osrmReq) {
+
+                    var requestUrl = config.server + '/' + osrmReq.service + '/' + osrmReq.version + '/' + osrmReq.profile + '/';
+
+                    for (var i = 0; i < osrmReq.coords.length; ++i) {
+
+                        // requestUrl += osrmReq.coords[i].lo + ',' + osrmReq.coords[i].la + ';';
+                        requestUrl += osrmReq.coords[i][1] + ',' + osrmReq.coords[i][0] + ';';
+                    }
+
+                    // removing the last ';'
+                    requestUrl = requestUrl.slice(0, -1);
+
+                    // get the array of options keys
+                    var optionsKeys = Object.keys(osrmReq.options);
+
+                    if (optionsKeys.length > 0) {
+                        requestUrl += '?';
+
+                        for (var i = 0; i < optionsKeys.length; ++i) {
+
+                            var key = optionsKeys[i];
+                            requestUrl += key + '=' + osrmReq.options[key] + '&';
+                        }
+
+                        // removing the last '&'
+                        requestUrl = requestUrl.slice(0, -1);
+                    }
+
+                    return requestUrl;
+                }
+
+
+                var osrmReq = {
+
+                    // One of the following values: route, nearest, table, match, trip, tile
+                    service: "trip",
+
+                    // Version of the protocol implemented by the service. v1 for all OSRM 5.x installations
+                    version: "v1",
+
+                    // Mode of transportation, is determined statically by the Lua profile that is used to prepare the data using osrm-extract. Typically car, bike or foot if using one of the supplied profiles.
+                    profile: "car",
+
+
+                    // an array of coordinates that are arrays of 2 elements : [latitude, longitude]
+                    coords: [
+                        [
+                            43.91681, 2.1382
+                        ],
+                        [
+                            43.9273, 2.14634
+                        ],
+                        [
+                            43.9409, 2.1185
+                        ]
+                    ],
+
+                    /*
+                        steps : Return route steps for each route leg
+                        geometries : Returned route geometry format (influences overview and per step)
+                    */
+                    options: {
+                        steps: false,
+                        geometries: "geojson"
+                    }
+
+                };
+
+                console.log(osrmReq);
+
+                var madeUrl = makeUrl(osrmReq);
+
+                console.log(madeUrl);
+
+                $("#osrmJsonResponse").append("<p>OSRM HTTP request <br> <strong>" + madeUrl + "</strong></p>");
+                $("#osrmJsonResponse").append("<p>Response documentation : <a href='http://project-osrm.org/docs/v5.6.4/api/#responses'>Responses</a></p>");
+
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: madeUrl,
+                    success: function(data, textStatus, jqXHR) {
+
+                        console.log(data);
+                        JSONFormatter.format(data, {
+                            collapse: true,
+                            appendTo: '#osrmJsonResponse'
+                        });
+
+                        var routeLayer = L.geoJSON().addTo(map);
+                        routeLayer.addData(data.trips[0].geometry);
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log("error : " + textStatus + errorThrown);
+                    }
+                });
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log("couldn't get the config file : " + textStatus + errorThrown);
+            }
+        });
+
+        var map = L.map('map').setView([43.9273, 2.14634], 13);
+
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.streets',
+            accessToken: 'pk.eyJ1IjoibXJmcmVlemUiLCJhIjoiY2owNWg2a2kyMDA2cjMycGZndzA2ZzZneCJ9.-wsVwihnGBO41Z9FvV_UAQ'
+        }).addTo(map);
+
+    });
+    </script>
+</head>
+
+<body>
+    <h1>Osrm Trip Requests</h1>
+    <p>Documentation for OSRM can be found on Github : <a href="https://github.com/Project-OSRM/osrm-backend/wiki">github.com/Project-OSRM</a></p>
+    <p>And hosted on their site : <a href="http://project-osrm.org/docs/v5.6.4/api/#general-options">project-osrm.org/docs</a></p>
+    <div id="osrmJsonResponse"></div>
+    <div id="map"></div>
+</body>
+
+</html>
