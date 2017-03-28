@@ -38,7 +38,8 @@
 
                     for (var i = 0; i < osrmReq.coords.length; ++i) {
 
-                        requestUrl += osrmReq.coords[i].lo + ',' + osrmReq.coords[i].la + ';';
+                        // requestUrl += osrmReq.coords[i].lo + ',' + osrmReq.coords[i].la + ';';
+                        requestUrl += osrmReq.coords[i][1] + ',' + osrmReq.coords[i][0] + ';';
                     }
 
                     // removing the last ';'
@@ -76,13 +77,16 @@
                     profile: "car",
 
 
-                    coords: [{
-                        la: 43.9164,
-                        lo: 2.13951,
-                    }, {
-                        la: 43.9273,
-                        lo: 2.14634,
-                    }],
+                    // an array of coordinates that are arrays of 2 elements : [latitude, longitude]
+                    coords: [
+                        [
+                            43.91681, 2.1382
+                        ],
+                        [
+                            43.9273, 2.14634
+                        ]
+                    ],
+
 
                     /*
                         steps : Return route steps for each route leg
