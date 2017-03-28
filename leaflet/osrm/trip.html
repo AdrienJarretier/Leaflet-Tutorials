@@ -138,10 +138,13 @@
                     success: function(data, textStatus, jqXHR) {
 
                         console.log(data);
-                        JSONFormatter.format(data, {
-                            collapse: true,
-                            appendTo: '#osrmJsonResponse'
-                        });
+
+                        if (osrmReq.options.overview != "full") {
+                            JSONFormatter.format(data, {
+                                collapse: true,
+                                appendTo: '#osrmJsonResponse'
+                            });
+                        }
 
                         var routeLayer = L.geoJSON().addTo(map);
                         routeLayer.addData(data.trips[0].geometry);
