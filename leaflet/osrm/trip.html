@@ -178,6 +178,11 @@
 
                         var routeLayer = L.geoJSON().addTo(map);
                         routeLayer.addData(data.trips[0].geometry);
+                        routeLayer.setStyle(function(feature) {
+                            return {
+                                color: "red"
+                            };
+                        });
 
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
